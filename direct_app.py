@@ -9,7 +9,6 @@ import numpy as np
 import pytube
 from jax.experimental.compilation_cache import compilation_cache as cc
 from transformers.models.whisper.tokenization_whisper import TO_LANGUAGE_CODE
-from transformers.pipelines.audio_utils import ffmpeg_read
 
 from whisper_jax import FlaxWhisperPipline
 
@@ -53,8 +52,7 @@ def format_timestamp(seconds: float, always_include_hours: bool = False, decimal
 
         seconds = milliseconds // 1_000
         milliseconds -= seconds * 1_000
-
-        hours_marker = f"{hours:02d}:" if always_include_hours or hours > 0 else ""
+ f"{hours:02d}:" if always_include_hours or hours > 0 else ""
         return f"{hours_marker}{minutes:02d}:{seconds:02d}{decimal_marker}{milliseconds:03d}"
     else:
         # we have a malformed timestamp so just return it as is
@@ -146,7 +144,6 @@ if __name__ == "__main__":
 
         stream.download(filename="audio.mp3")
 
-        with open("audio.mp3", "rb") as f:
             inputs = f.read()
 
         inputs = ffmpeg_read(inputs, pipeline.feature_extractor.sampling_rate)
@@ -203,7 +200,6 @@ if __name__ == "__main__":
         allow_flagging="never",
         title=title,
         examples=[["https://www.youtube.com/watch?v=m8u-18Q0s7I", "transcribe", False]],
-        cache_examples=False,
         description=description,
         article=article,
     )
